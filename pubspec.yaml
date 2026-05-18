@@ -1,0 +1,27 @@
+name: app_device_integrity_plus
+description: "Flutter plugin for App Attest and Play Integrity with real challenge (nonce) support. Replaces static dummy nonce with server-generated values."
+version: 1.0.2
+homepage: https://github.com/rexRUBY/app_device_integrity_plus.git
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.ruby.app_device_integrity_plus
+        pluginClass: AppDeviceIntegrityPlugin
+      ios:
+        pluginClass: AppDeviceIntegrityPlugin
