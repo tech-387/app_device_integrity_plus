@@ -15,6 +15,9 @@ class AppDeviceIntegrityPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
 
+    // Kept across calls so its prepared token provider is reused.
+    private var integrity: AppDeviceIntegrity? = null
+
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "app_attestation")
         channel.setMethodCallHandler(this)
@@ -31,7 +34,8 @@ class AppDeviceIntegrityPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
                 return
             }
 
-            val attestation = AppDeviceIntegrity(context, gcp)
+            val attestation = integrity?.takeIf { it.cloudProjectNumber == gcp }
+                ?: AppDeviceIntegrity(context, gcp).also { integrity = it }
             attestation.requestIntegrityToken(challenge) { resultObj ->
                 resultObj.onSuccess { token ->
                     result.success(token)
